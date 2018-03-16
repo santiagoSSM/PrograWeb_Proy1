@@ -1,6 +1,7 @@
 <?php 
 $filename1 = "archivos/indiceUser";
 $filename2 = "archivos/detalleUser";
+$directorio = "archivos";
 
 function agregar ($dato, $filename){
     //global $filename;
@@ -16,9 +17,22 @@ if(isset($_GET["usuario"])){
 	$usuario = $_GET['usuario'];
 	$pass = $_GET['password'];
 	
-	$tam = filesize($filename2);
-	//$tam = str_pad($tam,5);
-	$tam = $tam . " \n";
+
+	//si el directorio no existe lo crea
+	if (!file_exists($directorio)) {
+		mkdir($directorio, 0777, true);
+	}
+	
+	//si el archivo indice no existe lo inicia en 0
+	if (!file_exists($filename2)) {
+		$tam = 0 . " \n";
+		
+	}else{
+		
+		$tam = filesize($filename2);
+
+		$tam = $tam . " \n";
+	}
 	
 	agregar ($usuario, $filename2);
 	agregar ($tam, $filename1);
@@ -47,9 +61,9 @@ if(isset($_GET["usuario"])){
 				<h1>Crear usuario</h1>
 				<hr>
 				<br />
-				<div><label>Usuario: </label>&nbsp &nbsp &nbsp <input id="usuario" name="usuario" type="text" required></div>
+				<div><label>Usuario: </label>&nbsp &nbsp &nbsp <input id="usuario" name="usuario" type="text" maxlength="30" required></div>
 				<br />
-				<div><label>Contraseña: </label><input id="password" name="password" type="password" required></div>
+				<div><label>Contraseña: </label><input id="password" name="password" type="password" maxlength="30" required></div>
 				<br />
 				
 				

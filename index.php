@@ -1,31 +1,23 @@
 <?php
 session_start();
 
+error_reporting (0);
+
 $filename1 = "archivos/indiceUser";
 $filename2 = "archivos/detalleUser";
 $indiceArray = array();
 
 function leerIndice(){
-	global $filename1;
-	global $filename2;
 	global $indiceArray;
+	global $filename1;
 	
 	$indiceArray = file($filename1);
-    print_r($indiceArray);
-	
-	/*$file = fopen($filename2, "r");
-	$tam = filesize($filename);
-	fseek($file,0);
-	$datos = fread($file,$tam);
-	//$datos = chunk_split($datos, 40);
-	var_dump($datos);
-	$indiceArray = explode(" ", $datos);
-	//var_dump($indiceArray);
-	fclose($file);*/
-
 }
 
 function leerDatos ($usuario, $pass){
+	
+	leerIndice();
+	
 	global $filename1;
 	global $filename2;
 	global $indiceArray;
@@ -59,6 +51,9 @@ function leerDatos ($usuario, $pass){
 			
 		}else{
 			$num2 = ( int ) $indiceArray[$i];
+			if ($num2 == 0){
+				$num2 = 30;
+			}
 			fseek($file,$num);
 			$datos = fread($file,$num2);
 			if ($datoSesion == $datos){
@@ -104,9 +99,9 @@ function leerDatos ($usuario, $pass){
 				<h1>Iniciar sesion</h1>
 				<hr>
 				<br />
-				<div><label>Usuario: </label>&nbsp &nbsp &nbsp <input id="usuario" name="usuario" type="text"></div>
+				<div><label>Usuario: </label>&nbsp &nbsp &nbsp <input id="usuario" name="usuario" type="text" maxlength="30"></div>
 				<br />
-				<div><label>Contraseña: </label><input id="password" name="password" type="password"></div>
+				<div><label>Contraseña: </label><input id="password" name="password" type="password" maxlength="30"></div>
 				<br />
 				
 				<!--<div style = "font-size:16px; color:#cc0000;"><?php echo isset($error) ? utf8_decode($error) : '' ; ?></div>-->
