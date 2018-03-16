@@ -24,7 +24,7 @@ if(isset($_GET["usuario"])){
 	agregar ($tam, $filename1);
 	agregar ($pass, $filename2);
 	
-	 header('location: inicio.php'); 
+	 header('location: cerrarSesion.php'); 
 	 exit;
 }
 ?>
