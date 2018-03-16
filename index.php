@@ -51,7 +51,7 @@ function leerDatos ($usuario, $pass){
 			
 		}else{
 			$num2 = ( int ) $indiceArray[$i];
-			if ($num2 == 0){
+			if ($num2 < 30){
 				$num2 = 30;
 			}
 			fseek($file,$num);
