@@ -1,3 +1,92 @@
+<?php
+session_start();
+
+$filename1 = "archivos/indiceUser";
+$filename2 = "archivos/detalleUser";
+$indiceArray = array();
+
+function leerIndice(){
+	global $filename1;
+	global $filename2;
+	global $indiceArray;
+	
+	$indiceArray = file($filename1);
+    print_r($indiceArray);
+	
+	/*$file = fopen($filename2, "r");
+	$tam = filesize($filename);
+	fseek($file,0);
+	$datos = fread($file,$tam);
+	//$datos = chunk_split($datos, 40);
+	var_dump($datos);
+	$indiceArray = explode(" ", $datos);
+	//var_dump($indiceArray);
+	fclose($file);*/
+
+}
+
+function leerDatos ($usuario, $pass){
+	global $filename1;
+	global $filename2;
+	global $indiceArray;
+	
+	$indiceArray = file($filename1);
+	
+	$datoSesion=$usuario.$pass;
+	
+	$file = fopen($filename2, "r");
+	//$tam = filesize($filename);
+	
+	
+	$longitud = count($indiceArray);
+	
+ 
+	for($i=0; $i<$longitud; $i++){
+		$num = ( int ) $indiceArray[$i];
+		if (!empty($indiceArray[$i+1])){
+			$num2 = ( int ) $indiceArray[$i+1];
+			//echo $indiceArray[0] . "<br>";
+			//echo $indiceArray[1]. "<br>";
+			//echo $indiceArray[2]. "<br>";
+			fseek($file,$num);
+			$datos = fread($file,$num2-$num);
+			
+			if ($datoSesion == $datos){
+				$_SESSION['usuario'] = $usuario;
+				header('location: inicio.php'); 
+				exit;
+			}
+			
+		}else{
+			$num2 = ( int ) $indiceArray[$i];
+			fseek($file,$num);
+			$datos = fread($file,$num2);
+			if ($datoSesion == $datos){
+				$_SESSION['usuario'] = $usuario;
+				header('location: inicio.php'); 
+				exit;
+			}
+		}
+		
+	}
+	
+	
+	fclose($file);
+	
+}
+
+ 
+ if(isset($_GET["usuario"])){
+	$usuario = $_GET['usuario'];
+	$pass = $_GET['password'];
+	
+	//$dato=$usuario.$pass;
+	
+	leerDatos($usuario, $pass);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,7 +99,7 @@
 	</head>
 	<body>
 		<main>
-			<form class="form-signin" action="inicio.php" method="POST" > 
+			<form class="form-signin" action="" method="GET" > 
 				<br /> <br /> <br />
 				<h1>Iniciar sesion</h1>
 				<hr>

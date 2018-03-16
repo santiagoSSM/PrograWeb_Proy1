@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+//$usuario= $_SESSION['usuario'];
+
+if (isset($_SESSION['usuario'])){
+
+
 	/*$archivo = (isset($_FILES['archivo'])) ? $_FILES['archivo'] : null;
 	if ($archivo) {
 	  $ruta_destino_archivo = "archivos/{$archivo['name']}";
@@ -187,4 +194,10 @@
 }
     
 main();
+
+}
+else{
+	header('location: index.php'); 
+}
+
 ?>

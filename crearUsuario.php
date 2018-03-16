@@ -1,3 +1,35 @@
+<?php 
+$filename1 = "archivos/indiceUser";
+$filename2 = "archivos/detalleUser";
+
+function agregar ($dato, $filename){
+    //global $filename;
+	//global $filename2;
+    $handle = fopen($filename, "a");
+   // $string= str_pad($dato, 10); 
+	$numbytes = fwrite($handle, $dato);
+    fclose($handle);
+}
+
+
+if(isset($_GET["usuario"])){
+	$usuario = $_GET['usuario'];
+	$pass = $_GET['password'];
+	
+	$tam = filesize($filename2);
+	//$tam = str_pad($tam,5);
+	$tam = $tam . " \n";
+	
+	agregar ($usuario, $filename2);
+	agregar ($tam, $filename1);
+	agregar ($pass, $filename2);
+	
+	 header('location: inicio.php'); 
+	 exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,7 +42,7 @@
 	</head>
 	<body>
 		<main>
-			<form class="form-signin" action="index.php" method="POST"> 
+			<form class="form-signin" action="" method="GET"> 
 				<br /> <br /> <br />
 				<h1>Crear usuario</h1>
 				<hr>
@@ -19,8 +51,7 @@
 				<br />
 				<div><label>Contraseña: </label><input id="password" name="password" type="password" required></div>
 				<br />
-				<div><label>Confirmar: </label> &nbsp <input id="password" name="confirmarPassword" type="password" required></div>
-				<br />
+				
 				
 				<!--<div style = "font-size:16px; color:#cc0000;"><?php echo isset($error) ? utf8_decode($error) : '' ; ?></div>-->
 				<br />
