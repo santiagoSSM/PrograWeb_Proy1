@@ -37,6 +37,11 @@ if(isset($_GET["usuario"])){
 	agregar ($usuario, $filename2);
 	agregar ($tam, $filename1);
 	agregar ($pass, $filename2);
+
+	//si el directorio no existe lo crea
+	if (!file_exists($usuario)) {
+		mkdir("archivos/".$usuario, 0777, true);
+	}
 	
 	 header('location: cerrarSesion.php'); 
 	 exit;

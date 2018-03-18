@@ -6,7 +6,7 @@ form.form-signin{
 	text-align:center;
 }
 
-input.btn{
+input.btn, button{
 	background-color: #1ab2ff;
     border: none;
     color: white;
