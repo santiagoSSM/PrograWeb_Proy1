@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+error_reporting (0);
+
 if (isset($_SESSION['usuario'])){
 
 	$usuario= $_SESSION['usuario'];
@@ -8,13 +10,6 @@ if (isset($_SESSION['usuario'])){
 	$filedatas = array();
 	$idSelectTable = -1;
 	$idSelectOptions = -1;
-
-
-	/*$archivo = (isset($_FILES['archivo'])) ? $_FILES['archivo'] : null;
-	if ($archivo) {
-	  $ruta_destino_archivo = "archivos/{$archivo['name']}";
-	  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
-	}*/
 
 	function leerIndice(){
 		global $indiceArray;
@@ -34,7 +29,6 @@ if (isset($_SESSION['usuario'])){
 
 		//si el archivo indice no existe lo inicia en 0
 
-		$filename1 = "archivos/".$usuario."/indiceData";
 		$filename2 = "archivos/".$usuario."/detalleData";
 
 		global $indiceArray;
@@ -50,9 +44,6 @@ if (isset($_SESSION['usuario'])){
 			$num = ( int ) $indiceArray[$i];
 			if (!empty($indiceArray[$i+1])){
 				$num2 = ( int ) $indiceArray[$i+1];
-				//echo $indiceArray[0] . "<br>";
-				//echo $indiceArray[1]. "<br>";
-				//echo $indiceArray[2]. "<br>";
 				fseek($file,$num);
 				$datos = fread($file,$num2-$num);
 
@@ -109,6 +100,15 @@ if (isset($_SESSION['usuario'])){
 			agregar ($tam, $filename1);
 
 			$tam = $tam+strlen($valor) . " \n";
+		}
+
+		$archivo = (isset($_FILES['archivo'])) ? $_FILES['archivo'] : null;
+		if ($archivo) {
+		  $ruta_destino_archivo = "archivos/".$usuario."/{$archivo['name']}";
+		  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
+		}
+		else{
+			echo "no archivos";
 		}
 	}
 
@@ -248,22 +248,22 @@ if (isset($_SESSION['usuario'])){
 				</head>
 				<body>
 					<main>
-						<form class="form-signin" action="" method="GET" > 
+						<form class="form-signin" method="post" enctype="multipart/form-data"> 
 							<br /> <br /> <br />
 							<h1>Nuevo archivo Excel</h1>
 							<hr>
 							<br />
-							<div><label>Nombre: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30"></div>
+							<div><label>Nombre: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30" required></div>
 							<br />
-							<div><label>Autor: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30"></div>
+							<div><label>Autor: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30" required></div>
 							<br />
-							<div><label>Fecha: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30"></div>
+							<div><label>Fecha: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30" required></div>
 							<br />
-							<div><label>Tamaño: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30"></div>
+							<div><label>Tamaño: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30" required></div>
 							<br />
-							<div><label>Descripcion: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30"></div>
+							<div><label>Descripcion: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30" required></div>
 							<br />
-							<div><label>Clasificacion: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30"></div>
+							<div><label>Clasificacion: </label>&nbsp &nbsp &nbsp <input name="fileData[]" type="text" maxlength="30" required></div>
 							<br />
 							<input type="file" name="archivo" required></input>
 							<br />
@@ -281,16 +281,20 @@ if (isset($_SESSION['usuario'])){
 	}
 
 	function main(){
-	if(isset($_GET["fileData"])){
-		$fileData = $_GET["fileData"];
+	if(isset($_POST["fileData"])){
+		$fileData = $_POST["fileData"];
 	}else{
 		$fileData = array();
 	}
 	
-	if(isset($_GET["boton"])){
-		$boton = $_GET["boton"];
+	if(isset($_POST["boton"])){
+		$boton = $_POST["boton"];
 	}else{
-		$boton = "";
+		if(isset($_GET["boton"])){
+			$boton = $_GET["boton"];
+		}else{
+			$boton = "";
+		}
 	}
 
 	if(isset($_GET["idSelectTable"])){
