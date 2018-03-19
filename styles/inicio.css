@@ -24,21 +24,31 @@ img {
 	text-align: center;
 }
 
-table {
+article table {
 	width: 92%;
-    border-collapse: collapse;
+  border-collapse: collapse;
 	margin: 2% 4% 0 4%;
 }
 
-td, th {
+article  td, th {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 8px;
 }
 
-td a {
+article td a {
     text-decoration: none;
     color: inherit;
+}
+
+.options {
+    text-decoration: none;
+    color: inherit;
+}
+
+.options:hover {
+    text-decoration: none;
+    color: blue;
 }
 
 .selection {

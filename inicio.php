@@ -1,10 +1,13 @@
 <?php
-$idSelect = -1;
 session_start();
 
 if (isset($_SESSION['usuario'])){
 
 	$usuario= $_SESSION['usuario'];
+	$indiceArray = array();
+	$filedatas = array();
+	$idSelectTable = -1;
+	$idSelectOptions = -1;
 
 
 	/*$archivo = (isset($_FILES['archivo'])) ? $_FILES['archivo'] : null;
@@ -12,10 +15,6 @@ if (isset($_SESSION['usuario'])){
 	  $ruta_destino_archivo = "archivos/{$archivo['name']}";
 	  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
 	}*/
-
-	$indiceArray = array();
-	$filedatas = array();
-
 
 	function leerIndice(){
 		global $indiceArray;
@@ -113,19 +112,20 @@ if (isset($_SESSION['usuario'])){
 		}
 	}
 
-	function saveCookie(){
-	    global $idSelect;
-	    setcookie('id', $idSelect, time()+3600);
+	function saveCookieTable(){
+	    global $idSelectTable;
+	    setcookie('idSelectTable', $idSelectTable, time()+3600);
 	}
 
-	function readCookie(){
-	    if(isset($_COOKIE['id'])){
-	      global $idSelect;
-	      $idSelect = json_decode($_COOKIE['id'], true);
+	function readCookieTable(){
+	    if(isset($_COOKIE['idSelectTable'])){
+	      global $idSelectTable;
+	      $idSelectTable = json_decode($_COOKIE['idSelectTable'], true);
 	    }
 	}
 
 	function printForm(){
+		global $usuario;
 		echo('
 			<!DOCTYPE html>
 			<html lang="es">
@@ -140,23 +140,47 @@ if (isset($_SESSION['usuario'])){
 					<main>
 						<header>
 							<div class="iconUser">
-								<img src="user.png"/>
-								<span>perfil</span>
+								<a href="#"><img src="user.png"/></a>
+								<span>'.$usuario.'</span>
 							</div>
 
 							<h1 class="inicio">Administrador de archivos de Excel</h1>
 
-							<div class="iconOptions">
-								<img src="options.jpg"/>
-								<span>opciones</span>
-							</div>
+							    ');
+			                    global $idSelectOptions;
+			                  
+			                    if($idSelectOptions == -1){
+			                        echo ('
+			                        <div class="iconOptions">
+										<a href="http://localhost/inicio.php?idSelectOptions=0&boton=selectOptions"><img src="options.jpg"/></a>
+										<span>opciones</span>
+									</div>');
+			                    }else{
+			                        echo ('
+			                        <table>
+										<tr>
+											<th>
+												<div class="iconOptions">
+													<a href="http://localhost/inicio.php?idSelectOptions=-1&boton=selectOptions"><img src="options.jpg"/></a>
+													<span>opciones</span>
+												</div>
+											</th>
+											<th>
+												<a href="#" class="options">Ayuda</a>
+												</br>
+												</br>
+												<a href="http://localhost/cerrarSesion.php" class="options">Salir</a></th>
+										</tr>
+									</table>');
+			                    }  
+			                echo('
 						</header>
 
 						<article>
 
 							<nav>
 					          <a class="boton_personalizado" href="http://localhost/inicio.php?boton=nuevo">Nuevo</a>
-					          <a class="boton_personalizado" href="group.html">Editar</a>
+					          <a class="boton_personalizado" href="#">Editar</a>
 					          <a class="boton_personalizado" href="#">Eliminar</a>
 					        </nav>
 
@@ -172,30 +196,30 @@ if (isset($_SESSION['usuario'])){
 		                        ');
 
 				                  global $filedatas;
-				                  global $idSelect;
+				                  global $idSelectTable;
 				                  $longitud = count($filedatas);
 		
 	 
 								  for($i=0; $i<$longitud; $i+=6){
-				                    if($i == $idSelect){
+				                    if($i == $idSelectTable){
 				                        echo ('
 				                        <tr class="selection">
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
 				                        </tr>');
 				                    }else{
 				                        echo ('
 				                        <tr>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/index.php?idSelect=1&boton=selected">'.$filedatas[$i].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
+				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
 				                        </tr>');
 				                    }
 
@@ -269,27 +293,42 @@ if (isset($_SESSION['usuario'])){
 		$boton = "";
 	}
 
-	if(isset($_GET["idSelect"])){
-		$id = $_GET["idSelect"];
+	if(isset($_GET["idSelectTable"])){
+		$id1 = $_GET["idSelectTable"];
 	}else{
-		$id = -1;
+		$id1 = -1;
+	}
+
+	if(isset($_GET["idSelectOptions"])){
+		$id2 = $_GET["idSelectOptions"];
+	}else{
+		$id2 = -1;
 	}
 	
 
 	if (!empty($boton)){
 	    switch ($boton) {
-	        case 'selected':
-	            readCookie();
-	            global $idSelect;
+	        case 'selectTable':
+	            readCookieTable();
+	            global $idSelectTable;
 
 	            //selecciona o deselecciona
-	            if($idSelect == $id){
-	                $idSelect = -1;
+	            if($idSelectTable == $id1){
+	                $idSelectTable = -1;
 	            }else{
-	                $idSelect = $id;
+	                $idSelectTable = $id1;
 	            }
 	            
-	            saveCookie();
+	            saveCookieTable();
+	            leerDatos();
+	            printForm();
+	            break;
+
+	        case 'selectOptions':
+	            global $idSelectOptions;
+
+	            $idSelectOptions = $id2;
+
 	            leerDatos();
 	            printForm();
 	            break;
