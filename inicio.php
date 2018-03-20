@@ -107,9 +107,6 @@ if (isset($_SESSION['usuario'])){
 		  $ruta_destino_archivo = "archivos/".$usuario."/{$archivo['name']}";
 		  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
 		}
-		else{
-			echo "no archivos";
-		}
 	}
 
 	function saveCookieTable(){
@@ -152,7 +149,7 @@ if (isset($_SESSION['usuario'])){
 			                    if($idSelectOptions == -1){
 			                        echo ('
 			                        <div class="iconOptions">
-										<a href="http://localhost/inicio.php?idSelectOptions=0&boton=selectOptions"><img src="options.jpg"/></a>
+										<a href="inicio.php?idSelectOptions=0&boton=selectOptions"><img src="options.jpg"/></a>
 										<span>opciones</span>
 									</div>');
 			                    }else{
@@ -161,7 +158,7 @@ if (isset($_SESSION['usuario'])){
 										<tr>
 											<th>
 												<div class="iconOptions">
-													<a href="http://localhost/inicio.php?idSelectOptions=-1&boton=selectOptions"><img src="options.jpg"/></a>
+													<a href="inicio.php?idSelectOptions=-1&boton=selectOptions"><img src="options.jpg"/></a>
 													<span>opciones</span>
 												</div>
 											</th>
@@ -169,7 +166,7 @@ if (isset($_SESSION['usuario'])){
 												<a href="#" class="options">Ayuda</a>
 												</br>
 												</br>
-												<a href="http://localhost/cerrarSesion.php" class="options">Salir</a></th>
+												<a href="cerrarSesion.php" class="options">Salir</a></th>
 										</tr>
 									</table>');
 			                    }  
@@ -179,7 +176,7 @@ if (isset($_SESSION['usuario'])){
 						<article>
 
 							<nav>
-					          <a class="boton_personalizado" href="http://localhost/inicio.php?boton=nuevo">Nuevo</a>
+					          <a class="boton_personalizado" href="inicio.php?boton=nuevo">Nuevo</a>
 					          <a class="boton_personalizado" href="#">Editar</a>
 					          <a class="boton_personalizado" href="#">Eliminar</a>
 					        </nav>
@@ -204,22 +201,22 @@ if (isset($_SESSION['usuario'])){
 				                    if($i == $idSelectTable){
 				                        echo ('
 				                        <tr class="selection">
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
 				                        </tr>');
 				                    }else{
 				                        echo ('
 				                        <tr>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
-				                         <td><a href="http://localhost/inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
+				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
 				                        </tr>');
 				                    }
 
