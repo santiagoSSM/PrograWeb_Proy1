@@ -1,4 +1,4 @@
-form.form-signin{
+.form-signin{
 	padding:2px;
 	display:block;
 	width:290px;
@@ -6,7 +6,7 @@ form.form-signin{
 	text-align:center;
 }
 
-input.btn, button{
+.btn, button{
 	background-color: #1ab2ff;
     border: none;
     color: white;
@@ -27,14 +27,7 @@ aside{
 }
 
 table {
-	float: left;
-	width: 60%;
-    border-collapse: collapse;
-	margin: 2% 2% 0 2%;
-}
-
-table, th, td {
-    border: 1px solid black;
+	width: 80%;
 }
 
 h1.inicio{
