@@ -62,7 +62,6 @@ if (isset($_SESSION['usuario'])){
 			
 		}
 		
-		
 		fclose($file);
 		
 	}
@@ -93,20 +92,61 @@ if (isset($_SESSION['usuario'])){
 			$tam = $tam . " \n";
 		}
 
-
-		foreach($fileData as $clave => $valor){
-			agregar ($valor, $filename2);
-
-			agregar ($tam, $filename1);
-
-			$tam = $tam+strlen($valor) . " \n";
-		}
-
+		
+   		//guarda Información
 		$archivo = (isset($_FILES['archivo'])) ? $_FILES['archivo'] : null;
 		if ($archivo) {
-		  $ruta_destino_archivo = "archivos/".$usuario."/{$archivo['name']}";
-		  $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
+		  //determina extension del archivo
+		  $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+	      $extension = strtolower($extension);
+	      $extension_correcta = ($extension == 'xlsx' or $extension == 'xls');
+	      if ($extension_correcta) {
+	      	 //guarda Info
+	      	 $nombreArchivo = substr($tam, 0, -2).".".$extension;
+	         $ruta_destino_archivo = "archivos/".$usuario."/".$nombreArchivo;
+		  	 $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
+
+		  	 foreach($fileData as $clave => $valor){
+				 agregar ($valor, $filename2);
+
+				 agregar ($tam, $filename1);
+
+				 $tam = $tam+strlen($valor) . " \n";
+			 }
+
+			 agregar ($nombreArchivo, $filename2);
+
+			 agregar ($tam, $filename1);
+
+			 $tam = $tam+strlen($valor) . " \n";
+	      }
+	      else
+	      {
+	      	 return false; //error en el tipo de archivo
+	      }
 		}
+
+
+		return true;
+	}
+
+	function descargarArchivo($filename){
+		global $usuario;
+		global $filedatas;
+
+		if(substr($filename, -4) === ".xls"){
+			$extension = ".xls";
+			$id = substr($filename, 0, -4);
+		}else{
+			if(substr($filename, -5) === ".xlsx"){
+				$extension = ".xlsx";
+				$id = substr($filename, 0, -5);
+			}
+		}
+
+		header("Content-disposition: attachment; filename=".$filedatas[$id].$extension);
+		header("Content-type: MIME");
+		readfile("archivos/".$usuario."/".$filename);
 	}
 
 	function saveCookieTable(){
@@ -123,6 +163,9 @@ if (isset($_SESSION['usuario'])){
 
 	function printForm(){
 		global $usuario;
+		global $filedatas;
+		global $idSelectTable;
+		$longitud = count($filedatas);
 		echo('
 			<!DOCTYPE html>
 			<html lang="es">
@@ -137,7 +180,7 @@ if (isset($_SESSION['usuario'])){
 					<main>
 						<header>
 							<div class="iconUser">
-								<a href="#"><img src="user.png"/></a>
+								<a href="#"><img src="images/user.png"/></a>
 								<span>'.$usuario.'</span>
 							</div>
 
@@ -149,7 +192,7 @@ if (isset($_SESSION['usuario'])){
 			                    if($idSelectOptions == -1){
 			                        echo ('
 			                        <div class="iconOptions">
-										<a href="inicio.php?idSelectOptions=0&boton=selectOptions"><img src="options.jpg"/></a>
+										<a href="inicio.php?idSelectOptions=0&boton=selectOptions"><img src="images/options.jpg"/></a>
 										<span>opciones</span>
 									</div>');
 			                    }else{
@@ -180,49 +223,56 @@ if (isset($_SESSION['usuario'])){
 					          <a class="boton_personalizado" href="#">Editar</a>
 					          <a class="boton_personalizado" href="#">Eliminar</a>
 					        </nav>
+					        ');
 
-							<table>
-								<tr>
-									<th>Nombre</th>
-									<th>Autor</th>
-									<th>Fecha</th>
-									<th>Tamaño</th>
-									<th>Descripcion</th>
-									<th>Clasificacion</th>
-								</tr>
-		                        ');
+			                if($longitud != 1){
 
-				                  global $filedatas;
-				                  global $idSelectTable;
-				                  $longitud = count($filedatas);
-		
-	 
-								  for($i=0; $i<$longitud; $i+=6){
-				                    if($i == $idSelectTable){
-				                        echo ('
-				                        <tr class="selection">
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
-				                        </tr>');
-				                    }else{
-				                        echo ('
-				                        <tr>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
-				                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
-				                        </tr>');
-				                    }
-
-				                   }  
 				                echo('
-							</table>
+								<table>
+									<tr>
+										<th>Nombre</th>
+										<th>Autor</th>
+										<th>Fecha</th>
+										<th>Tamaño</th>
+										<th>Descripcion</th>
+										<th>Clasificacion</th>
+										<th>Descargar</th>
+									</tr>
+			                        ');
+		 
+									  for($i=0; $i<$longitud; $i+=7){
+					                    if($i == $idSelectTable){
+					                        echo ('
+					                        <tr class="selection">
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
+					                         <td><a href="inicio.php?filename='.$filedatas[$i+6].'&boton=descargarArchivo"><img src="images/xlsx.png"/></a></td>
+					                        </tr>');
+					                    }else{
+					                        echo ('
+					                        <tr>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+1].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+2].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
+					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
+					                         <td><a href="inicio.php?filename='.$filedatas[$i+6].'&boton=descargarArchivo"><img src="images/xlsx.png"/></a></td>
+					                        </tr>');
+					                    }
+
+					                   }  
+					                echo('
+								</table>
+								');
+
+					        }
+
+			                echo('
 						</article>
 					</main>
 				</body>
@@ -305,6 +355,12 @@ if (isset($_SESSION['usuario'])){
 	}else{
 		$id2 = -1;
 	}
+
+	if(isset($_GET["filename"])){
+		$filename = $_GET["filename"];
+	}else{
+		$filename = "";
+	}
 	
 
 	if (!empty($boton)){
@@ -338,6 +394,13 @@ if (isset($_SESSION['usuario'])){
 	            printNuevo();
 	            break;
 
+	        case 'descargarArchivo':
+	        	global $idSelectTable;
+
+	        	leerDatos();
+	        	descargarArchivo($filename);
+	        	break;
+
 	        /*case 'editar':
 	            readCookie();
 	            global $idSelect;
@@ -359,9 +422,13 @@ if (isset($_SESSION['usuario'])){
 
 	        case 'guardar':
 	            if (!empty($fileData)){
-	                escribeArchivo($fileData);
-	                leerDatos();
-	                printForm();
+	            	if(escribeArchivo($fileData)){
+	            		leerDatos();
+	                	printForm();
+	            	}else{
+	            		printNuevo();
+	            		echo "<script type='text/javascript'>alert('Formato de Archivo Incorrecto');</script>";
+	            	}
 	            }
 	            else{
 	                leerDatos();
