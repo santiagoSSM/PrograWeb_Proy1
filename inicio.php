@@ -49,17 +49,7 @@ if (isset($_SESSION['usuario'])){
 
 				array_push($filedatas, $datos);
 				
-			}else{
-				$num2 = ( int ) $indiceArray[$i];
-				if ($num2 < 30){
-					$num2 = 30;
-				}
-				fseek($file,$num);
-				$datos = fread($file,$num2);
-				
-				array_push($filedatas, $datos);
 			}
-			
 		}
 		
 		fclose($file);
@@ -73,6 +63,49 @@ if (isset($_SESSION['usuario'])){
 	    fclose($handle);
 	}
 
+	function eliminaDeArchivo($id){
+		leerIndice();
+
+		global $usuario;
+
+		//si el archivo indice no existe lo inicia en 0
+
+		$filename2 = "archivos/".$usuario."/detalleData";
+
+		global $indiceArray;
+		global $filedatas;
+		
+		$file = fopen($filename2, "r+");
+		
+		
+		$longitud = count($indiceArray);
+		
+	 
+		/*for($i=0; $i<$longitud; $i++){
+			$num = ( int ) $indiceArray[$i];
+			if (!empty($indiceArray[$i+1])){
+				$num2 = ( int ) $indiceArray[$i+1];
+				fseek($file,$num);
+				$datos = fread($file,$num2-$num);
+
+				array_push($filedatas, $datos);
+				
+			}else{
+				$num2 = ( int ) $indiceArray[$i];
+				if ($num2 < 30){
+					$num2 = 30;
+				}
+				fseek($file,$num);
+				$datos = fread($file,$num2);
+				
+				array_push($filedatas, $datos);
+			}
+			
+		}*/
+		
+		fclose($file);
+	}
+
 	function escribeArchivo($fileData){
 		global $usuario;
 
@@ -83,7 +116,10 @@ if (isset($_SESSION['usuario'])){
 		$tam = -1;
 
 		if (!file_exists($filename2)) {
+
 			$tam = 0 . " \n";
+
+			agregar ($tam, $filename1);
 			
 		}else{
 			
@@ -107,18 +143,18 @@ if (isset($_SESSION['usuario'])){
 		  	 $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
 
 		  	 foreach($fileData as $clave => $valor){
+		  	 	 $tam = $tam+strlen($valor) . " \n";
+
 				 agregar ($valor, $filename2);
 
 				 agregar ($tam, $filename1);
-
-				 $tam = $tam+strlen($valor) . " \n";
 			 }
+
+			 $tam = $tam+strlen($nombreArchivo) . " \n";
 
 			 agregar ($nombreArchivo, $filename2);
 
 			 agregar ($tam, $filename1);
-
-			 $tam = $tam+strlen($valor) . " \n";
 	      }
 	      else
 	      {
@@ -130,21 +166,19 @@ if (isset($_SESSION['usuario'])){
 		return true;
 	}
 
-	function descargarArchivo($filename){
+	function descargarArchivo($filename, $nameid){
 		global $usuario;
 		global $filedatas;
 
 		if(substr($filename, -4) === ".xls"){
 			$extension = ".xls";
-			$id = substr($filename, 0, -4);
 		}else{
 			if(substr($filename, -5) === ".xlsx"){
 				$extension = ".xlsx";
-				$id = substr($filename, 0, -5);
 			}
 		}
 
-		header("Content-disposition: attachment; filename=".$filedatas[$id].$extension);
+		header("Content-disposition: attachment; filename=".$filedatas[$nameid].$extension);
 		header("Content-type: MIME");
 		readfile("archivos/".$usuario."/".$filename);
 	}
@@ -201,12 +235,12 @@ if (isset($_SESSION['usuario'])){
 										<tr>
 											<th>
 												<div class="iconOptions">
-													<a href="inicio.php?idSelectOptions=-1&boton=selectOptions"><img src="options.jpg"/></a>
+													<a href="inicio.php?idSelectOptions=-1&boton=selectOptions"><img src="images/options.jpg"/></a>
 													<span>opciones</span>
 												</div>
 											</th>
 											<th>
-												<a href="#" class="options">Ayuda</a>
+												<a href="ayuda.php" class="options">Ayuda</a>
 												</br>
 												</br>
 												<a href="cerrarSesion.php" class="options">Salir</a></th>
@@ -221,7 +255,7 @@ if (isset($_SESSION['usuario'])){
 							<nav>
 					          <a class="boton_personalizado" href="inicio.php?boton=nuevo">Nuevo</a>
 					          <a class="boton_personalizado" href="#">Editar</a>
-					          <a class="boton_personalizado" href="#">Eliminar</a>
+					          <a class="boton_personalizado" href="inicio.php?boton=eliminar">Eliminar</a>
 					        </nav>
 					        ');
 
@@ -250,7 +284,7 @@ if (isset($_SESSION['usuario'])){
 					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
 					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
 					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
-					                         <td><a href="inicio.php?filename='.$filedatas[$i+6].'&boton=descargarArchivo"><img src="images/xlsx.png"/></a></td>
+					                         <td><a href="inicio.php?filename='.$filedatas[$i+6].'&nameid='.$i.'&boton=descargarArchivo"><img src="images/xlsx.png"/></a></td>
 					                        </tr>');
 					                    }else{
 					                        echo ('
@@ -261,7 +295,7 @@ if (isset($_SESSION['usuario'])){
 					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+3].'</a></td>
 					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+4].'</a></td>
 					                         <td><a href="inicio.php?idSelectTable='.$i.'&boton=selectTable">'.$filedatas[$i+5].'</a></td>
-					                         <td><a href="inicio.php?filename='.$filedatas[$i+6].'&boton=descargarArchivo"><img src="images/xlsx.png"/></a></td>
+					                         <td><a href="inicio.php?filename='.$filedatas[$i+6].'&nameid='.$i.'&boton=descargarArchivo"><img src="images/xlsx.png"/></a></td>
 					                        </tr>');
 					                    }
 
@@ -361,6 +395,12 @@ if (isset($_SESSION['usuario'])){
 	}else{
 		$filename = "";
 	}
+
+	if(isset($_GET["nameid"])){
+		$nameid = $_GET["nameid"];
+	}else{
+		$nameid = "";
+	}
 	
 
 	if (!empty($boton)){
@@ -395,10 +435,8 @@ if (isset($_SESSION['usuario'])){
 	            break;
 
 	        case 'descargarArchivo':
-	        	global $idSelectTable;
-
 	        	leerDatos();
-	        	descargarArchivo($filename);
+	        	descargarArchivo($filename, $nameid);
 	        	break;
 
 	        /*case 'editar':
@@ -411,14 +449,20 @@ if (isset($_SESSION['usuario'])){
 
 	            cargarIndices();
 	            printForm();
-	            break;
+	            break;*/
 
 	        case 'eliminar':
-	            eliminaDeArchivo();
+	        	readCookieTable();
+	            global $idSelectTable;
 
-	            cargarIndices();
+	            //selecciona o deselecciona
+	            if($idSelectTable != -1){
+	                eliminaDeArchivo($idSelectTable);
+	            }	            
+
+	            leerDatos();
 	            printForm();
-	            break;*/
+	            break;
 
 	        case 'guardar':
 	            if (!empty($fileData)){
