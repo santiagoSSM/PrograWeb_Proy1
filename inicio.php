@@ -53,13 +53,16 @@ if (isset($_SESSION['usuario'])){
 		}
 		
 		fclose($file);
-		
 	}
 
-	function agregar ($dato, $filename){
-	    $handle = fopen($filename, "a");
-	   // $string= str_pad($dato, 10); 
-		$numbytes = fwrite($handle, $dato);
+	function agregar ($pointer, $dato, $filename){
+	    if($pointer != -1){
+	    	$handle = fopen($filename, "r+");
+	    	fseek($handle,$pointer);
+	    }else{
+	    	$handle = fopen($filename, "a");
+	    }
+		fwrite($handle, $dato);
 	    fclose($handle);
 	}
 
@@ -68,7 +71,6 @@ if (isset($_SESSION['usuario'])){
 
 		global $usuario;
 
-		//si el archivo indice no existe lo inicia en 0
 
 		$filename2 = "archivos/".$usuario."/detalleData";
 
@@ -79,29 +81,50 @@ if (isset($_SESSION['usuario'])){
 		
 		
 		$longitud = count($indiceArray);
-		
-	 
-		/*for($i=0; $i<$longitud; $i++){
-			$num = ( int ) $indiceArray[$i];
-			if (!empty($indiceArray[$i+1])){
-				$num2 = ( int ) $indiceArray[$i+1];
-				fseek($file,$num);
-				$datos = fread($file,$num2-$num);
 
-				array_push($filedatas, $datos);
-				
+		$initRegistry = ( int ) $indiceArray[$id];
+		$initFileRegistry = ( int ) $indiceArray[$id+6];
+		$endRegistry = ( int ) $indiceArray[$id+7];
+		$initRegAfter = ( int ) $indiceArray[$id+1];
+
+		fseek($file,$initFileRegistry);
+
+		$nombrefisico =  fread($file,$endRegistry-$initFileRegistry); //lee y deja el cursor al final del registro a eliminar
+
+		unlink("archivos/".$usuario."/".$nombrefisico);
+
+		$registryTemp =  fread($file,( int ) $indiceArray[$longitud-1]-$endRegistry);
+
+		fseek($file,$initRegistry);
+
+		fwrite($file, $registryTemp);
+
+		fclose($file);
+
+		//actualiza indices
+
+		$newIndiceArray = array();
+
+		for ($i=0; $i<$longitud ; $i++) {
+			if($indiceArray[$i]<$initRegAfter){
+				array_push($newIndiceArray, ( int ) $indiceArray[$i]);
 			}else{
-				$num2 = ( int ) $indiceArray[$i];
-				if ($num2 < 30){
-					$num2 = 30;
+				if($indiceArray[$i]==$initRegAfter){
+					$i += 6;
+				}else{
+					array_push($newIndiceArray, end($newIndiceArray)+($indiceArray[$i]-$indiceArray[$i-1]));
 				}
-				fseek($file,$num);
-				$datos = fread($file,$num2);
-				
-				array_push($filedatas, $datos);
 			}
 			
-		}*/
+		}
+
+		$filename1 = "archivos/".$usuario."/indiceData";
+
+		$file = fopen($filename1, "w");
+
+		foreach ($newIndiceArray as $key => $value) {
+			fwrite($file, ($value . " \n"));
+		}
 		
 		fclose($file);
 	}
@@ -119,13 +142,16 @@ if (isset($_SESSION['usuario'])){
 
 			$tam = 0 . " \n";
 
-			agregar ($tam, $filename1);
+			agregar (-1, $tam, $filename1);
 			
 		}else{
-			
-			$tam = filesize($filename2);
 
-			$tam = $tam . " \n";
+			leerIndice();
+
+			global $indiceArray;
+
+			$tam = end($indiceArray);
+			
 		}
 
 		
@@ -143,18 +169,20 @@ if (isset($_SESSION['usuario'])){
 		  	 $archivo_ok = move_uploaded_file($archivo['tmp_name'], $ruta_destino_archivo);
 
 		  	 foreach($fileData as $clave => $valor){
-		  	 	 $tam = $tam+strlen($valor) . " \n";
 
-				 agregar ($valor, $filename2);
+				 agregar ($tam, $valor, $filename2);
 
-				 agregar ($tam, $filename1);
+				 $tam = $tam+strlen($valor) . " \n";
+
+				 agregar (-1, $tam, $filename1);
+				 
 			 }
+
+			 agregar ($tam, $nombreArchivo, $filename2);
 
 			 $tam = $tam+strlen($nombreArchivo) . " \n";
 
-			 agregar ($nombreArchivo, $filename2);
-
-			 agregar ($tam, $filename1);
+			 agregar (-1, $tam, $filename1);
 	      }
 	      else
 	      {
