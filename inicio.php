@@ -66,6 +66,114 @@ if (isset($_SESSION['usuario'])){
 	    fclose($handle);
 	}
 
+	function leeElemento($id){
+		leerIndice();
+
+		global $usuario;
+
+
+		$filename2 = "archivos/".$usuario."/detalleData";
+
+		global $indiceArray;
+		
+		$file = fopen($filename2, "r+");
+		
+		
+		$longitud = count($indiceArray);
+
+		$initElement = ( int ) $indiceArray[$id];
+		$endElement = ( int ) $indiceArray[$id+1];
+
+		fseek($file,$initElement);
+
+		$temp =  fread($file,$endElement-$initElement); //lee Elemento del Archivo de datos
+
+		fclose($file);
+
+		return $temp;
+	}
+
+	function leeRegistro($id){
+		$temp = array();
+
+		for ($i=$id; $i < $id+7 ; $i++) { 
+			array_push($temp, leeElemento($i));
+		}
+
+		return $temp;
+	}
+
+	function editarDeArchivo($id, $fileData){
+		leerIndice();
+
+		global $indiceArray;
+
+		//carga todos los registros en temporal para la edicion del registro cargado
+
+		$temp = array();
+
+		$longitud = count($indiceArray);
+
+		//crea el temporal sin modificar
+
+		for ($i=$id; $i < $longitud-7 ; $i+=7) { 
+			//echo "D: ".$i."   ".$longitud-7."</br>";
+			array_push($temp, leeRegistro($i));
+		}
+
+		//remplaza el elemento cargado en memoria con el temporal de la lista
+
+		for ($i=0; $i < 6; $i++) { 
+			$temp[0][$i] = $fileData[$i];
+		}
+
+		//guarda en el archivo desde el id seleccionado
+		global $usuario;
+
+		$filename2 = "archivos/".$usuario."/detalleData";
+		
+		$file = fopen($filename2, "r+");
+
+		$longitud = count($indiceArray);
+
+		$initRegistry = ( int ) $indiceArray[$id];
+
+		fseek($file,$initRegistry);
+
+		foreach ($temp as $key => $value) {
+			foreach ($value as $key2 => $value2) {
+				fwrite($file, $value2);
+			}
+		}
+
+		fclose($file);
+
+		//actualiza indices
+
+		$newIndiceArray = array();
+
+		for ($i=0; $indiceArray[$i]<=$initRegistry ; $i++) {
+			array_push($newIndiceArray, ( int ) $indiceArray[$i]);
+		}
+
+		foreach ($temp as $key => $value) {
+			foreach ($value as $key2 => $value2) {
+				//echo end($newIndiceArray)."   ".+strlen($value2)."</br>";
+				array_push($newIndiceArray, end($newIndiceArray)+strlen($value2));
+			}
+		}
+
+		$filename1 = "archivos/".$usuario."/indiceData";
+
+		$file = fopen($filename1, "w");
+
+		foreach ($newIndiceArray as $key => $value) {
+			fwrite($file, ($value . " \n"));
+		}
+		
+		fclose($file);
+	}
+
 	function eliminaDeArchivo($id){
 		leerIndice();
 
@@ -75,7 +183,6 @@ if (isset($_SESSION['usuario'])){
 		$filename2 = "archivos/".$usuario."/detalleData";
 
 		global $indiceArray;
-		global $filedatas;
 		
 		$file = fopen($filename2, "r+");
 		
@@ -91,7 +198,7 @@ if (isset($_SESSION['usuario'])){
 
 		$nombrefisico =  fread($file,$endRegistry-$initFileRegistry); //lee y deja el cursor al final del registro a eliminar
 
-		unlink("archivos/".$usuario."/".$nombrefisico);
+		unlink("archivos/".$usuario."/".$nombrefisico); //borra un fichero
 
 		$registryTemp =  fread($file,( int ) $indiceArray[$longitud-1]-$endRegistry);
 
@@ -282,7 +389,7 @@ if (isset($_SESSION['usuario'])){
 
 							<nav>
 					          <a class="boton_personalizado" href="inicio.php?boton=nuevo">Nuevo</a>
-					          <a class="boton_personalizado" href="#">Editar</a>
+					          <a class="boton_personalizado" href="inicio.php?boton=loadEdit">Editar</a>
 					          <a class="boton_personalizado" href="inicio.php?boton=eliminar">Eliminar</a>
 					        </nav>
 					        ');
@@ -389,6 +496,52 @@ if (isset($_SESSION['usuario'])){
 		');
 	}
 
+	function printEditar($data){
+		echo('
+			<!DOCTYPE html>
+			<html lang="es">
+
+				<head>
+					<meta charset="utf-8"/>
+					<link rel="stylesheet" href="styles/normalize.css" type="text/css" media="all" />
+					<link rel="stylesheet" href="styles/style.css" type="text/css" media="all" />
+					<title>Iniciar sesion</title>
+					
+				</head>
+				<body>
+					<main>
+						<form class="form-signin" method="post" enctype="multipart/form-data"> 
+							<br /> <br /> <br />
+							<h1>Nuevo archivo Excel</h1>
+							<hr>
+							<br />
+							<div><label>Nombre: </label>&nbsp &nbsp &nbsp <input name="fileData[]" value="'.$data[0].'" type="text" maxlength="30" required></div>
+							<br />
+							<div><label>Autor: </label>&nbsp &nbsp &nbsp <input name="fileData[]" value="'.$data[1].'" type="text" maxlength="30" required></div>
+							<br />
+							<div><label>Fecha: </label>&nbsp &nbsp &nbsp <input name="fileData[]" value="'.$data[2].'" type="text" maxlength="30" required></div>
+							<br />
+							<div><label>Tamaño: </label>&nbsp &nbsp &nbsp <input name="fileData[]" value="'.$data[3].'" type="text" maxlength="30" required></div>
+							<br />
+							<div><label>Descripcion: </label>&nbsp &nbsp &nbsp <input name="fileData[]" value="'.$data[4].'" type="text" maxlength="30" required></div>
+							<br />
+							<div><label>Clasificacion: </label>&nbsp &nbsp &nbsp <input name="fileData[]" value="'.$data[5].'" type="text" maxlength="30" required></div>
+							<br />
+							<label>'.$data[6].'</label>
+							<br />
+							<br />
+							<div><button type="submit" name="boton" value="editar">Guardar</button></div> 
+							<br />
+							<hr>
+								
+						</form> 
+					</main>
+				</body>
+
+			</html>
+		');
+	}
+
 	function main(){
 	if(isset($_POST["fileData"])){
 		$fileData = $_POST["fileData"];
@@ -467,17 +620,34 @@ if (isset($_SESSION['usuario'])){
 	        	descargarArchivo($filename, $nameid);
 	        	break;
 
-	        /*case 'editar':
-	            readCookie();
-	            global $idSelect;
+	        case 'loadEdit':
+	        	readCookieTable();
+	            global $idSelectTable;
 
-	            if($idSelect != -1){
-	                loadInfo();
+	            echo $idSelectTable;
+
+	            //selecciona o deselecciona
+	            if($idSelectTable != -1){
+	                printEditar(leeRegistro($idSelectTable));
+	            }else{
+	            	leerDatos();
+	            	printForm();
+	            }
+	            break;
+
+	        case 'editar':
+	            readCookieTable();
+	            global $idSelectTable;
+
+	            //selecciona o deselecciona
+	            if($idSelectTable != -1){
+	                editarDeArchivo($idSelectTable, $fileData);
 	            }
 
-	            cargarIndices();
-	            printForm();
-	            break;*/
+	            leerDatos();
+	            printForm();  
+
+	            break;
 
 	        case 'eliminar':
 	        	readCookieTable();
