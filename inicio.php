@@ -56,7 +56,7 @@ if (isset($_SESSION['usuario'])){
 	}
 
 	function agregar ($pointer, $dato, $filename){
-	    if($pointer != -1){
+	    if($pointer != -1 && file_exists($filename)){
 	    	$handle = fopen($filename, "r+");
 	    	fseek($handle,$pointer);
 	    }else{
