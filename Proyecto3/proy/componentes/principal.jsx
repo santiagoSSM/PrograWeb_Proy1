@@ -49,7 +49,9 @@ class App extends React.Component {
         super(props)
         this.state = { id:this.getQueryVariable("select"), user:this.getQueryVariable("user"), nombre:"", autor:"", fecha:"",
          tamano:0, descr:"", clasific:"", refSenial:"", tipoSenial:"", matSenial:"", latitud:"",
-          longitud:"", estado:"", fechaConstr:"", signals:[] }
+          longitud:"", estado:"", fechaConstr:"", signals:[],
+          handleGraficoCS: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Tipo',
+          handleGraficoRM: 'graficoRM.html?user='+this.getQueryVariable("user")+'&select=-1', }
         this.handleInsert = this.handleInsert.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -69,11 +71,21 @@ class App extends React.Component {
             return response.json()
         })
         .then((elem) => {
-            console.log(elem.Id);
-            this.state.id=elem.Id;
-            this.state.user=elem.user;
-            this.state.nombre=elem.nombre;
-            
+            this.setState({id: elem.Id});
+            this.setState({user: elem.user});
+            this.setState({nombre: elem.nombre});
+            this.setState({autor: elem.autor});
+            this.setState({fecha: elem.fecha});
+            this.setState({tamano: elem.tamano});
+            this.setState({descr: elem.descr});
+            this.setState({clasific: elem.clasific});
+            this.setState({refSenial: elem.refSenial});
+            this.setState({tipoSenial: elem.tipoSenial});
+            this.setState({matSenial: elem.matSenial});
+            this.setState({latitud: elem.latitud});
+            this.setState({longitud: elem.longitud});
+            this.setState({estado: elem.estado});
+            this.setState({fechaConstr: elem.fechaConstr});
         })
       }
     }
@@ -95,8 +107,9 @@ class App extends React.Component {
       this.setState({fechaConstr:nextProps.proy.fechaConstr});
     }
     handleClick = (param) => (e) => { 
-      location.href='principal.html?user='+this.state.user+'&select='+param;
+        location.href='principal.html?user='+this.state.user+'&select='+param;
     }
+
     handleInsert() {
         fetch("server/index.php/proy/"+this.state.id,{
             method: "post",
@@ -185,10 +198,10 @@ class App extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    <a href="graficoCS.html">Cantidad de señales</a>
+                    <a href={this.state.handleGraficoCS}>Cantidad de señales</a>
                   </DropdownItem>
                   <DropdownItem>
-                    <a href="graficoRM.html">Rutas de mantenimiento</a>
+                    <a href={this.state.handleGraficoRM}>Rutas de mantenimiento</a>
                   </DropdownItem>
                   
                 </DropdownMenu>
@@ -256,7 +269,7 @@ class App extends React.Component {
                 <Input type="text" name="matSenial" value={this.state.matSenial} onChange={this.handleFields}/></FormGroup>
             <FormGroup><Label>Latitud:</Label>
                 <Input type="text" name="latitud" value={this.state.latitud} onChange={this.handleFields}/></FormGroup>
-            <FormGroup><Label>Logngitud:</Label>
+            <FormGroup><Label>Longitud:</Label>
                 <Input type="text" name="longitud" value={this.state.longitud} onChange={this.handleFields}/></FormGroup>
 			      <FormGroup><Label>Estado:</Label>
                 <Input type="text" name="estado" value={this.state.estado} onChange={this.handleFields}/></FormGroup>
