@@ -185,15 +185,12 @@ class App extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    O
+                    <a href="graficoCS.html">Cantidad de señales</a>
                   </DropdownItem>
                   <DropdownItem>
-                    O
+                    <a href="graficoRM.html">Rutas de mantenimiento</a>
                   </DropdownItem>
                   
-                  <DropdownItem>
-                    R
-                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
               
