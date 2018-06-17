@@ -21,8 +21,8 @@ class App extends React.Component {
         this.state = { user:this.getQueryVariable("user"), signals: [], signal: [], data: {},
         urlTipo: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Tipo',
         urlMaterial: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Material',
-        urlEstCons: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=EstCons',
-        urlFechInst: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=FechInst',
+        urlEstCons: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Estado_de_Conservacion',
+        urlFechInst: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Fecha_de_Instalacion',
         urlReturn: 'principal.html?user='+this.getQueryVariable("user")+'&select=-1' }
         this.handleReload = this.handleReload.bind(this);
     }
@@ -50,7 +50,7 @@ class App extends React.Component {
                 });
                 break;
 
-            case "EstCons":
+            case "Estado_de_Conservacion":
                 this.state.signals.forEach(element => {
                     var tmp;
         
@@ -69,7 +69,7 @@ class App extends React.Component {
                 });
                 break;
 
-            case "FechInst":
+            case "Fecha_de_Instalacion":
                 this.state.signals.forEach(element => {
                     var tmp;
         

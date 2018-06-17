@@ -51,7 +51,7 @@ class App extends React.Component {
          tamano:0, descr:"", clasific:"", refSenial:"", tipoSenial:"", matSenial:"", latitud:"",
           longitud:"", estado:"", fechaConstr:"", signals:[],
           handleGraficoCS: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Tipo',
-          handleGraficoRM: 'graficoRM.html?user='+this.getQueryVariable("user")+'&select=-1', }
+          handleGraficoRM: 'graficoRM.html?user='+this.getQueryVariable("user")+'&select=Fecha', }
         this.handleInsert = this.handleInsert.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
