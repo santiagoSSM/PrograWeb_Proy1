@@ -12,8 +12,8 @@ class RegistroSenial implements JsonSerializable
     private $refSenial = "";
     private $tipoSenial = "";
     private $matSenial = "";
-    private $latitud = "";
-    private $longitud = "";
+    private $kilometraje = "";
+    private $cantHombres = "";
     private $estado = "";
     private $fechaConstr = "";
 
@@ -105,20 +105,20 @@ class RegistroSenial implements JsonSerializable
         return $this->matSenial;
     }
 
-    function setLatitud($value){
-        $this->latitud = $value;
+    function setKilometraje($value){
+        $this->kilometraje = $value;
     }
 
-    function getLatitud(){
-        return $this->latitud;
+    function getKilometraje(){
+        return $this->kilometraje;
     }
 
-    function setLongitud($value){
-        $this->longitud = $value;
+    function setCantHombres($value){
+        $this->cantHombres = $value;
     }
 
-    function getLongitud(){
-        return $this->longitud;
+    function getCantHombres(){
+        return $this->cantHombres;
     }
 
     function setEstado($value){
@@ -152,8 +152,8 @@ class RegistroSenial implements JsonSerializable
             'refSenial' => $this->getRefSenial(),
             'tipoSenial'   => $this->getTipoSenial(),
             'matSenial' => $this->getMatSenial(),
-            'latitud'   => $this->getLatitud(),
-            'longitud' => $this->getLongitud(),
+            'kilometraje'   => $this->getKilometraje(),
+            'cantHombres' => $this->getCantHombres(),
             'estado'   => $this->getEstado(),
             'fechaConstr' => $this->getFechaConstr()
         ];
@@ -245,8 +245,8 @@ class ConnectionSqlite
                 refSenial TEXT,
                 tipoSenial TEXT,
                 matSenial TEXT,
-                latitud TEXT,
-                longitud TEXT,
+                kilometraje TEXT,
+                cantHombres TEXT,
                 estado TEXT,
                 fechaConstr TEXT
             )
@@ -300,8 +300,8 @@ class RegSignal
                 $obj->setRefSenial($value->refSenial);
                 $obj->setTipoSenial($value->tipoSenial);
                 $obj->setMatSenial($value->matSenial);
-                $obj->setLatitud($value->latitud);
-                $obj->setLongitud($value->longitud);
+                $obj->setKilometraje($value->kilometraje);
+                $obj->setCantHombres($value->cantHombres);
                 $obj->setEstado($value->estado);
                 $obj->setFechaConstr($value->fechaConstr);
 
@@ -336,8 +336,8 @@ class RegSignal
                 $obj->setRefSenial($value->refSenial);
                 $obj->setTipoSenial($value->tipoSenial);
                 $obj->setMatSenial($value->matSenial);
-                $obj->setLatitud($value->latitud);
-                $obj->setLongitud($value->longitud);
+                $obj->setKilometraje($value->kilometraje);
+                $obj->setCantHombres($value->cantHombres);
                 $obj->setEstado($value->estado);
                 $obj->setFechaConstr($value->fechaConstr);
 
@@ -378,8 +378,8 @@ class RegSignal
                 $obj->setRefSenial($temp->refSenial);
                 $obj->setTipoSenial($temp->tipoSenial);
                 $obj->setMatSenial($temp->matSenial);
-                $obj->setLatitud($temp->latitud);
-                $obj->setLongitud($temp->longitud);
+                $obj->setKilometraje($temp->kilometraje);
+                $obj->setCantHombres($temp->cantHombres);
                 $obj->setEstado($temp->estado);
                 $obj->setFechaConstr($temp->fechaConstr);
 
@@ -398,7 +398,7 @@ class RegSignal
     {
         $stmt = $this->connection->prepare(
             'INSERT INTO reg_signal (user, nombre, autor, fecha, tamano, descr, clasific, refSenial, tipoSenial,
-            matSenial, latitud, longitud, estado, fechaConstr) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+            matSenial, kilometraje, cantHombres, estado, fechaConstr) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
         );
 
         $stmt->bindParam(1, $reg_signal->getUser());
@@ -411,8 +411,8 @@ class RegSignal
         $stmt->bindParam(8, $reg_signal->getRefSenial());
         $stmt->bindParam(9, $reg_signal->getTipoSenial());
         $stmt->bindParam(10, $reg_signal->getMatSenial());
-        $stmt->bindParam(11, $reg_signal->getLatitud());
-        $stmt->bindParam(12, $reg_signal->getLongitud());
+        $stmt->bindParam(11, $reg_signal->getKilometraje());
+        $stmt->bindParam(12, $reg_signal->getCantHombres());
         $stmt->bindParam(13, $reg_signal->getEstado());
         $stmt->bindParam(14, $reg_signal->getFechaConstr());
 
@@ -427,7 +427,7 @@ class RegSignal
     {
         $stmt = $this->connection->prepare(
             'UPDATE reg_signal SET user = ?, nombre = ?, autor = ?, fecha = ?, tamano = ?, descr = ?, clasific = ?,
-            refSenial = ?, tipoSenial = ?, matSenial = ?, latitud = ?, longitud = ?, estado = ?,
+            refSenial = ?, tipoSenial = ?, matSenial = ?, kilometraje = ?, cantHombres = ?, estado = ?,
             fechaConstr = ? WHERE id = ?'
         );
 
@@ -441,8 +441,8 @@ class RegSignal
         $stmt->bindParam(8, $reg_signal->getRefSenial());
         $stmt->bindParam(9, $reg_signal->getTipoSenial());
         $stmt->bindParam(10, $reg_signal->getMatSenial());
-        $stmt->bindParam(11, $reg_signal->getLatitud());
-        $stmt->bindParam(12, $reg_signal->getLongitud());
+        $stmt->bindParam(11, $reg_signal->getKilometraje());
+        $stmt->bindParam(12, $reg_signal->getCantHombres());
         $stmt->bindParam(13, $reg_signal->getEstado());
         $stmt->bindParam(14, $reg_signal->getFechaConstr());
         $stmt->bindParam(15, $reg_signal->getId(), PDO::PARAM_INT);
@@ -626,8 +626,8 @@ $obj->setClasific("clasific");
 $obj->setRefSenial("refSenial");
 $obj->setTipoSenial("tipoSenial");
 $obj->setMatSenial("matSenial");
-$obj->setLatitud("latitud");
-$obj->setLongitud("longitud");
+$obj->setKilometraje("kilometraje");
+$obj->setCantHombres("cantHombres");
 $obj->setEstado("rstado");
 $obj->setFechaConstr("fechaCosntr");
 

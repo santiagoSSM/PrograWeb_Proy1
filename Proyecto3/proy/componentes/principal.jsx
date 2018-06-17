@@ -34,8 +34,8 @@ class SignalList extends React.Component {
       <td>{signal.refSenial}</td>
       <td>{signal.tipoSenial}</td>
       <td>{signal.matSenial}</td>
-      <td>{signal.latitud}</td>
-      <td>{signal.longitud}</td>
+      <td>{signal.kilometraje}</td>
+      <td>{signal.cantHombres}</td>
       <td>{signal.estado}</td>
       <td>{signal.fechaConstr}</td>
     </tr>
@@ -48,8 +48,10 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = { id:this.getQueryVariable("select"), user:this.getQueryVariable("user"), nombre:"", autor:"", fecha:"",
-         tamano:0, descr:"", clasific:"", refSenial:"", tipoSenial:"", matSenial:"", latitud:"",
-          longitud:"", estado:"", fechaConstr:"", signals:[] }
+         tamano:0, descr:"", clasific:"", refSenial:"", tipoSenial:"", matSenial:"", kilometraje:"",
+          cantHombres:"", estado:"", fechaConstr:"", signals:[],
+          handleGraficoCS: 'graficoCS.html?user='+this.getQueryVariable("user")+'&select=Tipo',
+          handleGraficoRM: 'graficoRM.html?user='+this.getQueryVariable("user")+'&select=Fecha', }
         this.handleInsert = this.handleInsert.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -69,11 +71,21 @@ class App extends React.Component {
             return response.json()
         })
         .then((elem) => {
-            console.log(elem.Id);
-            this.state.id=elem.Id;
-            this.state.user=elem.user;
-            this.state.nombre=elem.nombre;
-            
+            this.setState({id: elem.Id});
+            this.setState({user: elem.user});
+            this.setState({nombre: elem.nombre});
+            this.setState({autor: elem.autor});
+            this.setState({fecha: elem.fecha});
+            this.setState({tamano: elem.tamano});
+            this.setState({descr: elem.descr});
+            this.setState({clasific: elem.clasific});
+            this.setState({refSenial: elem.refSenial});
+            this.setState({tipoSenial: elem.tipoSenial});
+            this.setState({matSenial: elem.matSenial});
+            this.setState({kilometraje: elem.kilometraje});
+            this.setState({cantHombres: elem.cantHombres});
+            this.setState({estado: elem.estado});
+            this.setState({fechaConstr: elem.fechaConstr});
         })
       }
     }
@@ -89,14 +101,15 @@ class App extends React.Component {
       this.setState({refSenial:nextProps.proy.refSenial});
       this.setState({tipoSenial:nextProps.proy.tipoSenial});
       this.setState({matSenial:nextProps.proy.matSenial});
-      this.setState({latitud:nextProps.proy.latitud});
-      this.setState({longitud:nextProps.proy.longitud});
+      this.setState({kilometraje:nextProps.proy.kilometraje});
+      this.setState({cantHombres:nextProps.proy.cantHombres});
       this.setState({estado:nextProps.proy.estado});
       this.setState({fechaConstr:nextProps.proy.fechaConstr});
     }
     handleClick = (param) => (e) => { 
-      location.href='principal.html?user='+this.state.user+'&select='+param;
+        location.href='principal.html?user='+this.state.user+'&select='+param;
     }
+
     handleInsert() {
         fetch("server/index.php/proy/"+this.state.id,{
             method: "post",
@@ -114,8 +127,8 @@ class App extends React.Component {
                 refSenial: this.state.refSenial,
                 tipoSenial: this.state.tipoSenial,
                 matSenial: this.state.matSenial,
-                latitud: this.state.latitud,
-                longitud: this.state.longitud,
+                kilometraje: this.state.kilometraje,
+                cantHombres: this.state.cantHombres,
                 estado: this.state.estado,
                 fechaConstr: this.state.fechaConstr
             })
@@ -141,8 +154,8 @@ class App extends React.Component {
               refSenial: this.state.refSenial,
               tipoSenial: this.state.tipoSenial,
               matSenial: this.state.matSenial,
-              latitud: this.state.latitud,
-              longitud: this.state.longitud,
+              kilometraje: this.state.kilometraje,
+              cantHombres: this.state.cantHombres,
               estado: this.state.estado,
               fechaConstr: this.state.fechaConstr
             })
@@ -185,10 +198,10 @@ class App extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem>
-                    <a href="graficoCS.html">Cantidad de señales</a>
+                    <a href={this.state.handleGraficoCS}>Cantidad de señales</a>
                   </DropdownItem>
                   <DropdownItem>
-                    <a href="graficoRM.html">Rutas de mantenimiento</a>
+                    <a href={this.state.handleGraficoRM}>Rutas de mantenimiento</a>
                   </DropdownItem>
                   
                 </DropdownMenu>
@@ -222,8 +235,8 @@ class App extends React.Component {
                 <th>Referencia</th>
                 <th>Tipo</th>
                 <th>Material</th>
-                <th>Latitud</th>
-                <th>Longitud</th>
+                <th>Kilometraje</th>
+                <th>Cantidad de Hombres</th>
                 <th>Estado</th>
                 <th>Fecha_constr.</th>
                 </tr></thead>
@@ -254,10 +267,10 @@ class App extends React.Component {
                 <Input type="text" name="tipoSenial" value={this.state.tipoSenial} onChange={this.handleFields}/></FormGroup>
              <FormGroup><Label>Material:</Label>
                 <Input type="text" name="matSenial" value={this.state.matSenial} onChange={this.handleFields}/></FormGroup>
-            <FormGroup><Label>Latitud:</Label>
-                <Input type="text" name="latitud" value={this.state.latitud} onChange={this.handleFields}/></FormGroup>
-            <FormGroup><Label>Logngitud:</Label>
-                <Input type="text" name="longitud" value={this.state.longitud} onChange={this.handleFields}/></FormGroup>
+            <FormGroup><Label>Kilometraje:</Label>
+                <Input type="text" name="kilometraje" value={this.state.kilometraje} onChange={this.handleFields}/></FormGroup>
+            <FormGroup><Label>Cantidad de Hombres:</Label>
+                <Input type="text" name="cantHombres" value={this.state.cantHombres} onChange={this.handleFields}/></FormGroup>
 			      <FormGroup><Label>Estado:</Label>
                 <Input type="text" name="estado" value={this.state.estado} onChange={this.handleFields}/></FormGroup>
 			      <FormGroup><Label>Fecha:</Label>
