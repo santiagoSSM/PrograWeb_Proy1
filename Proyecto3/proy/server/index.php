@@ -42,8 +42,8 @@
                 $obj->setRefSenial($_PUT['refSenial']);
                 $obj->setTipoSenial($_PUT['tipoSenial']);
                 $obj->setMatSenial($_PUT['matSenial']);
-                $obj->setLatitud($_PUT['latitud']);
-                $obj->setLongitud($_PUT['longitud']);
+                $obj->setKilometraje($_PUT['kilometraje']);
+                $obj->setCantHombres($_PUT['cantHombres']);
                 $obj->setEstado($_PUT['estado']);
                 $obj->setFechaConstr($_PUT['fechaConstr']);
 				
@@ -90,8 +90,8 @@
 				$obj->setRefSenial($_POST['refSenial']);
 				$obj->setTipoSenial($_POST['tipoSenial']);
 				$obj->setMatSenial($_POST['matSenial']);
-				$obj->setLatitud($_POST['latitud']);
-				$obj->setLongitud($_POST['longitud']);
+				$obj->setKilometraje($_POST['kilometraje']);
+				$obj->setCantHombres($_POST['cantHombres']);
 				$obj->setEstado($_POST['estado']);
 				$obj->setFechaConstr($_POST['fechaConstr']);
 				

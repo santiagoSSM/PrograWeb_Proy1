@@ -36,13 +36,13 @@ class App extends React.Component {
                     var tmp;
         
                     convert.forEach(element2 => {
-                        if(element2.dato == element.estado){
+                        if(element2.dato == element.kilometraje){
                             tmp = element2;
                         }
                     });
         
                     if(tmp == null){
-                        convert.push({dato: element.estado, cant: 1});
+                        convert.push({dato: element.kilometraje, cant: 1});
                     }
                     else{
                         tmp.cant++;
@@ -55,13 +55,13 @@ class App extends React.Component {
                     var tmp;
         
                     convert.forEach(element2 => {
-                        if(element2.dato == element.fechaConstr){
+                        if(element2.dato == element.cantHombres){
                             tmp = element2;
                         }
                     });
         
                     if(tmp == null){
-                        convert.push({dato: element.fechaConstr, cant: 1});
+                        convert.push({dato: element.cantHombres, cant: 1});
                     }
                     else{
                         tmp.cant++;
